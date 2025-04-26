@@ -4,6 +4,7 @@ import { CreatePayment, PaymentForm } from "@/app/actions";
 import Image from "next/image";
 import {
   Dispatch,
+  JSX,
   SetStateAction,
   startTransition,
   useActionState,
@@ -138,7 +139,7 @@ export function Button({
 }: {
   onSubmit: (payload: PaymentForm) => void;
   paymentForm: PaymentForm;
-}) {
+}): JSX.Element {
   return (
     <button
       className="w-full bg-[#004F8A] rounded-xl font-semibold text-white p-2.5"

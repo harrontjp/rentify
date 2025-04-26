@@ -25,6 +25,10 @@
     "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.27.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/oxide": "^4.1.4",
     "@tailwindcss/postcss": "^4",

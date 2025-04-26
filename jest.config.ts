@@ -4,7 +4,17 @@ const config: Config = {
   preset: "ts-jest/presets/default-esm", // 👈 Use the ESM preset
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // 👈 Tell ts-jest to compile TypeScript with ESM
+    "^.+\\.(ts|tsx)$": [
+      "babel-jest",
+      {
+        presets: [
+          "@babel/preset-env",
+          "@babel/preset-react",
+          "@babel/preset-typescript",
+        ],
+        plugins: ["@babel/plugin-transform-runtime"],
+      },
+    ],
   },
   globals: {
     "ts-jest": {

@@ -1,3 +1,4 @@
+import React from "react"; // Add this line to the top of your test file
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Button } from "../Payment";
 import "@testing-library/jest-dom";
