@@ -89,6 +89,8 @@ export default function FilterBox({
         else
           selectedFilter.priceRange.max =
             action.value === 0 ? null : action.value;
+
+        console.log(selectedFilter);
         break;
 
       case "ResetFilter":
@@ -109,7 +111,10 @@ export default function FilterBox({
         });
         break;
     }
-
+    setSharedState({
+      ...sharedState,
+      filter: selectedFilter,
+    });
     // Clear previous timer
     if (filterDebounceRef.current) {
       clearTimeout(filterDebounceRef.current);

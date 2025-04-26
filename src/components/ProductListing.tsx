@@ -2,7 +2,7 @@
 
 import { FilterProducts } from "@/app/actions";
 import FilterBox, { VehicleType } from "./FilterBox";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSharedState } from "@/app/StateProvider";
@@ -20,13 +20,17 @@ export default function ProductListing() {
   const router = useRouter();
   const { sharedState, setSharedState } = useSharedState();
   const [state, filterProduct, pending] = useActionState(FilterProducts, []);
-
+  const prevStateRef = useRef(state);
   useEffect(() => {
-    setSharedState({
-      ...sharedState,
-      products: state,
-    });
-  }, [state]);
+    if (prevStateRef.current !== state) {
+      setSharedState({
+        ...sharedState,
+        products: state,
+      });
+
+      prevStateRef.current = state;
+    }
+  }, [state, sharedState, setSharedState]);
 
   return (
     <>
@@ -77,13 +81,19 @@ export default function ProductListing() {
 
 export function DateBar() {
   const [state, filterProduct] = useActionState(FilterProducts, []);
+  const prevStateRef = useRef(state);
+
   const { sharedState, setSharedState } = useSharedState();
   useEffect(() => {
-    setSharedState({
-      ...sharedState,
-      products: state,
-    });
-  }, [state]);
+    if (prevStateRef.current !== state) {
+      setSharedState({
+        ...sharedState,
+        products: state,
+      });
+
+      prevStateRef.current = state;
+    }
+  }, [state, sharedState, setSharedState]);
   const today = new Date();
   const localDate =
     today.getFullYear() +

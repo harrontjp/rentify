@@ -132,7 +132,7 @@ function DonePaymentButton({
   );
 }
 
-function Button({
+export function Button({
   onSubmit,
   paymentForm,
 }: {
