@@ -4,7 +4,12 @@ const config: Config = {
   preset: "ts-jest/presets/default-esm", // 👈 Use the ESM preset
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.tsx?$": ["ts-jest", { useESM: true }], // 👈 Tell ts-jest to compile TypeScript with ESM
+    "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // 👈 Tell ts-jest to compile TypeScript with ESM
+  },
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
   },
   moduleNameMapper: {
     // 👇 Jest expects CommonJS, but jose is ESM-only, so we mock it
