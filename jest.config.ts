@@ -1,7 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
-  preset: "ts-jest/presets/default-esm", // 👈 Use the ESM preset
+  preset: "ts-jest", // 👈 Use the ESM preset
   testEnvironment: "jsdom",
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // 👈 Tell ts-jest to compile TypeScript with ESM
@@ -15,6 +15,7 @@ const config: Config = {
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"], // 👈 Tell Jest these are ESM
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 };
 
 export default config;
