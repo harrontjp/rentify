@@ -52,12 +52,15 @@ export async function FilterProducts(prevState: unknown, filtering: Filter) {
 }
 
 export async function getProduct(id: string) {
-  const res = await fetch(`http://localhost:3000/products/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await fetch(
+    `http://${process.env.PRODUCT_URL}:${process.env.PRODUCT_PORT}/products/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!res.ok) {
     return {
