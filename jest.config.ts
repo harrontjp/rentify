@@ -6,11 +6,6 @@ const config: Config = {
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // 👈 Tell ts-jest to compile TypeScript with ESM
   },
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
-  },
   moduleNameMapper: {
     // 👇 Jest expects CommonJS, but jose is ESM-only, so we mock it
     "^jose/(.*)$": "<rootDir>/__mocks__/joseMock.ts",
