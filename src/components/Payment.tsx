@@ -16,7 +16,8 @@ import { useSharedState } from "@/app/StateProvider";
 export default function Payment() {
   const { sharedState, setSharedState } = useSharedState();
   const [state, createPayment, pending] = useActionState(CreatePayment, {
-    result: "notAsked",
+    _t: "notAsked",
+    res: "",
   });
 
   const [paymentForm, setPaymentForm] = useState<PaymentForm>({
@@ -26,9 +27,8 @@ export default function Payment() {
     ccv: 0,
     bookingId: "",
   });
-
   useEffect(() => {
-    if (sharedState.bookingId != null && paymentForm.bookingId != null) {
+    if (sharedState.bookingId != null && paymentForm.bookingId == null) {
       setPaymentForm({ ...paymentForm, bookingId: sharedState.bookingId });
     }
   }, [sharedState, paymentForm]);
@@ -62,7 +62,7 @@ export default function Payment() {
           className="flex bg-white rounded-2xl flex-col gap-3"
           style={{ padding: "36px", borderRadius: "24px" }}
         >
-          {state.result === "notAsked" && !pending ? (
+          {state._t === "notAsked" && !pending ? (
             <>
               <Header isProcessing={false} />
               <div style={{ borderTop: "1px solid #C6C6C6" }}></div>

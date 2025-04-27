@@ -6,7 +6,6 @@ describe("Button component", () => {
     const button = document.createElement("button");
     button.textContent = "Click me";
     document.body.appendChild(button);
-
     expect(screen.getByText("Click me")).toBeInTheDocument();
   });
 
@@ -16,7 +15,6 @@ describe("Button component", () => {
     button.textContent = "Click me too";
     button.addEventListener("click", handleClick);
     document.body.appendChild(button);
-
     fireEvent.click(screen.getByText("Click me too"));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });

@@ -3,8 +3,7 @@
 import { Filter } from "@/components/FilterBox";
 import { createSession } from "./lib/sessions";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function FilterProducts(prevState: any, filtering: Filter) {
+export async function FilterProducts(prevState: unknown, filtering: Filter) {
   // console.log(filtering);
   const params = new URLSearchParams();
   if (filtering.vehicleType)
@@ -18,26 +17,38 @@ export async function FilterProducts(prevState: any, filtering: Filter) {
   if (filtering.bookingDates.to != null) {
     params.append("dateStart", filtering.bookingDates.from.toISOString());
     params.append("dateEnd", filtering.bookingDates.to.toISOString());
-    console.log("here");
   }
-  const res = await fetch(
-    `http://localhost:3000/products?${params.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  try {
+    const res = await fetch(
+      `http://${process.env.PRODUCT_URL}:${
+        process.env.PRODUCT_PORT
+      }/products?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      console.log(res);
+      return {
+        error: `Response error: ${res.status}`,
+      };
     }
-  );
 
-  if (!res.ok) {
+    const json = await res.json();
     return {
-      error: `Response error: ${res.status}`,
+      _t: "success",
+      res: json,
+    };
+  } catch (error) {
+    console.error(`Response error: ${error}`);
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
     };
   }
-
-  const json = await res.json();
-  return json;
 }
 
 export async function getProduct(id: string) {
@@ -81,8 +92,7 @@ export async function CreateBooking(
   prevState: unknown,
   bookingData: BookingData
 ) {
-  const url = `http://${process.env.BOOKING_URL}:${process.env.BOOKING_PORT}/bookings`;
-
+  const url = `http://${process.env.BOOKING_URL}:${process.env.BOOKING_PORT}/api/bookings`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -91,6 +101,7 @@ export async function CreateBooking(
     body: JSON.stringify(bookingData),
   });
   if (!res.ok) {
+    console.log(res);
     return {
       _t: "error",
       error: `Response error: ${res.status}`,
@@ -112,7 +123,9 @@ export type PaymentForm = {
 };
 
 export type PaymentPayload = {
-  result: string;
+  _t: string;
+  res?: string;
+  error?: string;
 };
 
 export async function CreatePayment(
@@ -124,22 +137,37 @@ export async function CreatePayment(
 
     paymentMethod: "CARD_VISA",
 
-    paymentStatus: "PENDING",
+    paymentStatus: "SUCCESS",
   };
 
-  const res = await fetch(
-    `http://${process.env.PAYMENT_URL}:${process.env.PAYMENT_PORT}/api/payments`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
+  try {
+    const res = await fetch(
+      `http://${process.env.PAYMENT_URL}:${process.env.PAYMENT_PORT}/api/payments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.ok}`,
+      };
     }
-  );
 
-  console.log(await res.json());
-  return {
-    result: "Ok",
-  };
+    return {
+      _t: "success",
+      res: "Ok",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
+    };
+  }
 }

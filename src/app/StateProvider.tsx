@@ -10,6 +10,8 @@ type State = {
   filter: Filter;
   products: [];
   bookingId: string | null;
+  toastOpen: boolean;
+  toastMessage: string;
 };
 type StateContextType = {
   sharedState: State;
@@ -32,6 +34,8 @@ export function StateProvider({ children }: { children: React.ReactNode }) {
     },
     products: [],
     bookingId: null,
+    toastOpen: false,
+    toastMessage: "",
   });
 
   return (

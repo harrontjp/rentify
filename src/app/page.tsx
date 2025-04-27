@@ -19,7 +19,7 @@ export default function Home() {
       >
         <div
           style={{
-            width: "71dvw",
+            width: "93dvw",
             maxWidth: "1024px",
             height: "419px",
             position: "relative",

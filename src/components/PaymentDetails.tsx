@@ -10,7 +10,10 @@ export default function PaymentDetails({ vehicle }: { vehicle: Vehicle }) {
   const { sharedState, setSharedState } = useSharedState();
   const [state, createBooking] = useActionState(CreateBooking, null);
   useEffect(() => {
-    if (state == null || state._t === "error") return;
+    console.log(state);
+
+    if (state == null || state._t === "error" || sharedState.bookingId != null)
+      return;
     setSharedState({
       ...sharedState,
       isPaymentPageOpen: true,

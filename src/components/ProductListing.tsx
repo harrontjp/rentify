@@ -19,15 +19,22 @@ export type Vehicle = {
 export default function ProductListing() {
   const router = useRouter();
   const { sharedState, setSharedState } = useSharedState();
-  const [state, filterProduct, pending] = useActionState(FilterProducts, []);
+  const [state, filterProduct, pending] = useActionState(FilterProducts, null);
   const prevStateRef = useRef(state);
   useEffect(() => {
-    if (prevStateRef.current !== state) {
-      setSharedState({
-        ...sharedState,
-        products: state,
-      });
-
+    if (prevStateRef.current !== state && state != null) {
+      if (state._t === "success") {
+        setSharedState({
+          ...sharedState,
+          products: state.res,
+        });
+      } else {
+        setSharedState({
+          ...sharedState,
+          toastMessage: "Product service is not available.",
+          toastOpen: true,
+        });
+      }
       prevStateRef.current = state;
     }
   }, [state, sharedState, setSharedState]);
@@ -45,7 +52,7 @@ export default function ProductListing() {
       >
         {pending
           ? "Loading..."
-          : state.error != null
+          : state?.error != null
           ? state.error
           : sharedState.products.map((prod: Vehicle, ind: number) => (
               <div
@@ -80,17 +87,24 @@ export default function ProductListing() {
 }
 
 export function DateBar() {
-  const [state, filterProduct] = useActionState(FilterProducts, []);
+  const [state, filterProduct] = useActionState(FilterProducts, null);
   const prevStateRef = useRef(state);
 
   const { sharedState, setSharedState } = useSharedState();
   useEffect(() => {
-    if (prevStateRef.current !== state) {
-      setSharedState({
-        ...sharedState,
-        products: state,
-      });
-
+    if (prevStateRef.current !== state && state != null) {
+      if (state._t === "success") {
+        setSharedState({
+          ...sharedState,
+          products: state.res,
+        });
+      } else {
+        setSharedState({
+          ...sharedState,
+          toastMessage: "Product service is not available.",
+          toastOpen: true,
+        });
+      }
       prevStateRef.current = state;
     }
   }, [state, sharedState, setSharedState]);

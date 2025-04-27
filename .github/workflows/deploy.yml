@@ -31,7 +31,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-
+    needs: ci
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,9 +49,14 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t product-microservice .
-          docker tag product-microservice:latest 409151997352.dkr.ecr.ap-southeast-1.amazonaws.com/ass-backend:rentify-latest
+          docker build -t frontend-microservice .
+          docker tag frontend-microservice:latest 409151997352.dkr.ecr.ap-southeast-1.amazonaws.com/ass-backend:rentify-latest
 
       - name: Push Docker image to ECR
         run: |
           docker push 409151997352.dkr.ecr.ap-southeast-1.amazonaws.com/ass-backend:rentify-latest
+
+      - name: Trigger ECS service update
+        run: |
+          # Force ECS to launch new tasks and pull the latest image from ECR
+          aws ecs update-service --cluster ass-ecs --service ass-ecs-fargate-v3 --force-new-deployment

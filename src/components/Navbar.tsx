@@ -9,6 +9,7 @@ import { useSharedState } from "@/app/StateProvider";
 import { CgProfile } from "react-icons/cg";
 import { CreateSession } from "@/app/actions";
 import Payment from "./Payment";
+import AlertToast from "./Alert";
 
 export type SearchParams = {
   vehicleType: string;
@@ -28,7 +29,7 @@ export type Product = {
 
 export default function Navbar({ userId }: { userId: number | null }) {
   const { sharedState, setSharedState } = useSharedState();
-
+  const { toastOpen, toastMessage } = sharedState;
   useEffect(() => {
     if (userId == null) return;
     if (sharedState.userId == null) {
@@ -43,7 +44,18 @@ export default function Navbar({ userId }: { userId: number | null }) {
   return (
     <>
       {sharedState.isPaymentPageOpen && <Payment />}
-
+      <AlertToast
+        message={toastMessage}
+        type="error"
+        isOpen={toastOpen}
+        onClose={() => {
+          setSharedState({
+            ...sharedState,
+            toastOpen: false,
+            toastMessage: "",
+          });
+        }}
+      />
       <nav
         className="flex items-center justify-center"
         style={{
