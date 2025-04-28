@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Booking } from "../lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -10,34 +9,26 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-const mockBookings: Booking[] = [
-  {
-    id: "1",
-    carId: "car1",
-    startDate: new Date("2025-05-01"),
-    endDate: new Date("2025-05-05"),
-    totalPrice: 400,
-    status: "confirmed",
-    includeInsurance: true,
-    customerName: "John Doe",
-  },
-  {
-    id: "2",
-    carId: "car2",
-    startDate: new Date("2025-06-10"),
-    endDate: new Date("2025-06-15"),
-    totalPrice: 750,
-    status: "pending",
-    includeInsurance: false,
-    customerName: "John Doe",
-  },
-];
-const BookingsPage = () => {
+import { verifySession } from "../lib/dal";
+import { getBooking, getProduct } from "../actions";
+import { Vehicle } from "@/components/ProductListing";
+
+type Booking = {
+  bookingId: string;
+  productId: string;
+  bookingStartDate: string;
+  bookingEndDate: string;
+  status: string;
+  totalAmount: number;
+  createdAt: string;
+};
+
+const BookingsPage = async () => {
   const getStatusColor = (status: Booking["status"]) => {
     switch (status) {
       case "confirmed":
         return "bg-green-500";
-      case "pending":
+      case "PENDING":
         return "bg-yellow-500";
       case "cancelled":
         return "bg-red-500";
@@ -47,7 +38,22 @@ const BookingsPage = () => {
         return "bg-gray-500";
     }
   };
-
+  const session = await verifySession();
+  const userId: number | null =
+    session.userId != null ? (session.userId as number) : null;
+  if (userId == null) return <></>;
+  const bookingResponse = await getBooking(userId);
+  if (bookingResponse.error) {
+    return <div style={{ color: "red" }}>Something wrong with the server</div>;
+  }
+  const allBookings = bookingResponse.response;
+  const vehiclePriceSet = new Map();
+  await Promise.all(
+    allBookings.map(async (booking: Booking) => {
+      const vehicle: Vehicle = await getProduct(booking.productId);
+      vehiclePriceSet.set(booking.bookingId, vehicle.vehicleModel);
+    })
+  );
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow container mx-auto px-4 py-8">
@@ -60,31 +66,29 @@ const BookingsPage = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Booking ID</TableHead>
+                  <TableHead>Vehicle</TableHead>
                   <TableHead>Start Date</TableHead>
                   <TableHead>End Date</TableHead>
                   <TableHead>Total Price</TableHead>
-                  <TableHead>Insurance</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockBookings.map((booking) => (
-                  <TableRow key={booking.id}>
-                    <TableCell className="font-medium">{booking.id}</TableCell>
-                    <TableCell>
-                      {format(booking.startDate, "MMM dd, yyyy")}
+                {allBookings.map((booking: Booking) => (
+                  <TableRow key={booking.bookingId}>
+                    <TableCell className="font-medium">
+                      {booking.bookingId}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {vehiclePriceSet.get(booking.bookingId)}
                     </TableCell>
                     <TableCell>
-                      {format(booking.endDate, "MMM dd, yyyy")}
+                      {format(booking.bookingStartDate, "MMM dd, yyyy")}
                     </TableCell>
-                    <TableCell>${booking.totalPrice}</TableCell>
                     <TableCell>
-                      {booking.includeInsurance ? (
-                        <Badge variant="default">Yes</Badge>
-                      ) : (
-                        <Badge variant="secondary">No</Badge>
-                      )}
+                      {format(booking.bookingEndDate, "MMM dd, yyyy")}
                     </TableCell>
+                    <TableCell>${booking.totalAmount}</TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(booking.status)}>
                         {booking.status}

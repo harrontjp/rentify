@@ -98,14 +98,40 @@ export default function Payment() {
                 fontWeight: "600",
               }}
             >
-              <Image alt="marker" src="/success.svg" width={92} height={92} />
-              Payment has been confirmed!
-              <DonePaymentButton
-                onSubmit={() =>
-                  setSharedState({ ...sharedState, isPaymentPageOpen: false })
-                }
-                paymentForm={paymentForm}
-              />
+              {state.error == null ? (
+                <>
+                  <Image
+                    alt="marker"
+                    src="/success.svg"
+                    width={92}
+                    height={92}
+                  />
+                  Payment has been confirmed!
+                  <DonePaymentButton
+                    onSubmit={() =>
+                      setSharedState({
+                        ...sharedState,
+                        isPaymentPageOpen: false,
+                      })
+                    }
+                    paymentForm={paymentForm}
+                  />
+                </>
+              ) : (
+                <>
+                  <Image alt="marker" src="/cross.png" width={92} height={92} />
+                  Payment failed
+                  <DonePaymentButton
+                    onSubmit={() =>
+                      setSharedState({
+                        ...sharedState,
+                        isPaymentPageOpen: false,
+                      })
+                    }
+                    paymentForm={paymentForm}
+                  />
+                </>
+              )}
             </div>
           )}
         </div>
@@ -122,13 +148,13 @@ function DonePaymentButton({
 }) {
   return (
     <button
-      className="w-full bg-[#004F8A] rounded-xl font-semibold text-white p-2.5"
+      className="w-full bg-[#004F8A] rounded-xl text-white p-2.5"
       style={{ textAlign: "center", cursor: "pointer" }}
       onClick={() => {
         onSubmit();
       }}
     >
-      Done!
+      My Bookings
     </button>
   );
 }

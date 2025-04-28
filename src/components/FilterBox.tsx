@@ -90,7 +90,6 @@ export default function FilterBox({
           selectedFilter.priceRange.max =
             action.value === 0 ? null : action.value;
 
-        console.log(selectedFilter);
         break;
 
       case "ResetFilter":

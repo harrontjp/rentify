@@ -4,7 +4,6 @@ import { Filter } from "@/components/FilterBox";
 import { createSession } from "./lib/sessions";
 
 export async function FilterProducts(prevState: unknown, filtering: Filter) {
-  // console.log(filtering);
   const params = new URLSearchParams();
   if (filtering.vehicleType)
     params.append("vehicleType", filtering.vehicleType.join(","));
@@ -31,7 +30,6 @@ export async function FilterProducts(prevState: unknown, filtering: Filter) {
       }
     );
     if (!res.ok) {
-      console.log(res);
       return {
         error: `Response error: ${res.status}`,
       };
@@ -83,6 +81,7 @@ type BookingData = {
   productId: number;
   bookingStartDate: string;
   bookingEndDate: string;
+  totalAmount: number;
 };
 
 export type BookingResponse = {
@@ -96,25 +95,59 @@ export async function CreateBooking(
   bookingData: BookingData
 ) {
   const url = `http://${process.env.BOOKING_URL}:${process.env.BOOKING_PORT}/api/bookings`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(bookingData),
-  });
-  if (!res.ok) {
-    console.log(res);
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookingData),
+    });
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.status}`,
+      };
+    }
+    const result = await res.json();
+    return {
+      _t: "success",
+      response: result,
+    };
+  } catch (error) {
     return {
       _t: "error",
-      error: `Response error: ${res.status}`,
+      error: `Response error: ${error}`,
     };
   }
-  const result = await res.json();
-  return {
-    _t: "success",
-    response: result,
-  };
+}
+
+export async function getBooking(userId: number) {
+  const url = `http://${process.env.BOOKING_URL}:${process.env.BOOKING_PORT}/api/bookings/user/${userId}`;
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.status}`,
+      };
+    }
+    const result = await res.json();
+    return {
+      _t: "success",
+      response: result,
+    };
+  } catch (error) {
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
+    };
+  }
 }
 
 export type PaymentForm = {
@@ -165,6 +198,101 @@ export async function CreatePayment(
     return {
       _t: "success",
       res: "Ok",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
+    };
+  }
+}
+
+export async function getRecommendation(userId: number) {
+  try {
+    const res = await fetch(
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.ok}`,
+      };
+    }
+    const result = await res.json();
+    return {
+      _t: "success",
+      res: result,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
+    };
+  }
+}
+
+export async function createRecoView(userId: number, productId: string) {
+  try {
+    const res = await fetch(
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/view/${userId}/${productId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.ok}`,
+      };
+    }
+    const result = await res.json();
+    return {
+      _t: "success",
+      res: result,
+    };
+  } catch (error) {
+    return {
+      _t: "error",
+      error: `Response error: ${error}`,
+    };
+  }
+}
+
+export async function createRecoBook(userId: number, productId: number) {
+  try {
+    const res = await fetch(
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/book/${userId}/${productId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        _t: "error",
+        error: `Response error: ${res.ok}`,
+      };
+    }
+    const result = await res.json();
+    return {
+      _t: "success",
+      res: result,
     };
   } catch (error) {
     console.error(error);

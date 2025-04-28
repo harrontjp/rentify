@@ -1,9 +1,10 @@
 import { Vehicle } from "@/components/ProductListing";
-import { getProduct } from "../actions";
+import { createRecoView, getProduct } from "../actions";
 import Image from "next/image";
 import { VehicleType } from "@/components/FilterBox";
 import PackageDetails from "@/components/PackageDetails";
 import PaymentDetails from "@/components/PaymentDetails";
+import { verifySession } from "../lib/dal";
 
 export default async function Page({
   params,
@@ -14,6 +15,13 @@ export default async function Page({
   const res = await getProduct(id);
   if (res.error != null) return <></>;
   const vehicle: Vehicle = res;
+  const session = await verifySession();
+  const userId: number | null =
+    session.userId != null ? (session.userId as number) : null;
+  if (userId) {
+    await createRecoView(userId, id);
+  }
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div

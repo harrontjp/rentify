@@ -1,8 +1,16 @@
 import ProductListing, { DateBar } from "@/components/ProductListing";
 
 import Image from "next/image";
+import { getRecommendation } from "./actions";
+import { verifySession } from "./lib/dal";
 
-export default function Home() {
+export default async function Home() {
+  const session = await verifySession();
+  const userId: number | null =
+    session.userId != null ? (session.userId as number) : null;
+  const res = userId != null ? await getRecommendation(userId) : null;
+  const vehicleArr = res === null ? [] : res._t === "success" ? res.res : [];
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div
@@ -38,7 +46,7 @@ export default function Home() {
 
         <DateBar />
         <div className="flex gap-2">
-          <ProductListing />
+          <ProductListing recoVehicles={vehicleArr} />
         </div>
       </div>
     </div>

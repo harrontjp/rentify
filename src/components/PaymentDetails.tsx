@@ -1,25 +1,36 @@
 "use client";
-import { CreateBooking } from "@/app/actions";
+import { CreateBooking, createRecoBook } from "@/app/actions";
 import { useSharedState } from "../app/StateProvider";
 import { Vehicle } from "./ProductListing";
 import Image from "next/image";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { formatDateToYYYYMMDD } from "@/app/lib/utils";
 
 export default function PaymentDetails({ vehicle }: { vehicle: Vehicle }) {
   const { sharedState, setSharedState } = useSharedState();
-  const [state, createBooking] = useActionState(CreateBooking, null);
+  const [state, createBooking, pending] = useActionState(CreateBooking, null);
+  const [showedError, setShowedError] = useState(false);
   useEffect(() => {
-    console.log(state);
+    if (state == null || sharedState.bookingId != null) return;
 
-    if (state == null || state._t === "error" || sharedState.bookingId != null)
+    if (state._t === "error" && showedError === false) {
+      setShowedError(true);
+      setSharedState({
+        ...sharedState,
+        toastOpen: true,
+        toastMessage:
+          "Booking service is not available at this time. Please try again later.",
+      });
       return;
-    setSharedState({
-      ...sharedState,
-      isPaymentPageOpen: true,
-      bookingId: state.response.bookingId,
-    });
-  }, [state, sharedState, setSharedState]);
+    }
+
+    if (state._t === "success" && sharedState.bookingId == null)
+      setSharedState({
+        ...sharedState,
+        isPaymentPageOpen: true,
+        bookingId: state.response.bookingId,
+      });
+  }, [state, sharedState, setSharedState, showedError]);
   const { bookingDates } = sharedState.filter;
   if (bookingDates.to == null) return <></>;
   const numOfDays = getDaysBetweenDates(bookingDates.from, bookingDates.to);
@@ -50,9 +61,12 @@ export default function PaymentDetails({ vehicle }: { vehicle: Vehicle }) {
         <div
           className="bg-[#004F8A] text-white text-lg w-full flex justify-center items-center rounded-xl"
           style={{ height: "44px", cursor: "pointer" }}
-          onClick={() => {
+          onClick={async () => {
+            if (sharedState.userId != null) {
+              await createRecoBook(sharedState.userId, vehicle.id);
+            }
+
             startTransition(() => {
-              console.log(sharedState.userId);
               if (
                 sharedState.userId == null ||
                 sharedState.filter.bookingDates.to == null
@@ -68,11 +82,12 @@ export default function PaymentDetails({ vehicle }: { vehicle: Vehicle }) {
                 bookingEndDate: formatDateToYYYYMMDD(
                   sharedState.filter.bookingDates.to
                 ),
+                totalAmount: vehicle.pricePerDay * numOfDays * 1.09,
               });
             });
           }}
         >
-          Next Step
+          {pending ? "Loading..." : "Next Step"}
         </div>
       </div>
     </>
