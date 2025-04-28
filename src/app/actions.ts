@@ -94,7 +94,9 @@ export async function CreateBooking(
   prevState: unknown,
   bookingData: BookingData
 ) {
+  console.log("Calling CreateBooking");
   const url = `http://${process.env.BOOKING_URL}:${process.env.BOOKING_PORT}/api/bookings`;
+  console.log(url);
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -214,9 +216,11 @@ export async function CreatePayment(
 }
 
 export async function getRecommendation(userId: number) {
+  console.log("Calling getRecommendation");
+  console.log(process.env.REC_URL, process.env.REC_PORT);
   try {
     const res = await fetch(
-      `http://${process.env.REC_URL}:${process.env.REC_PORT}/${userId}`,
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/recommendations/${userId}`,
       {
         method: "GET",
         headers: {
@@ -249,7 +253,7 @@ export async function getRecommendation(userId: number) {
 export async function createRecoView(userId: number, productId: string) {
   try {
     const res = await fetch(
-      `http://${process.env.REC_URL}:${process.env.REC_PORT}/view/${userId}/${productId}`,
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/recommendations/view/${userId}/${productId}`,
       {
         method: "POST",
         headers: {
@@ -282,7 +286,7 @@ export async function createRecoView(userId: number, productId: string) {
 export async function createRecoBook(userId: number, productId: number) {
   try {
     const res = await fetch(
-      `http://${process.env.REC_URL}:${process.env.REC_PORT}/book/${userId}/${productId}`,
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/recommendations/book/${userId}/${productId}`,
       {
         method: "POST",
         headers: {

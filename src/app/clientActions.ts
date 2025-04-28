@@ -3,7 +3,7 @@
 export async function createRecoBook(userId: number, productId: number) {
   try {
     const res = await fetch(
-      `http://${process.env.REC_URL}:${process.env.REC_PORT}/book/${userId}/${productId}`,
+      `http://${process.env.REC_URL}:${process.env.REC_PORT}/recommendations/book/${userId}/${productId}`,
       {
         method: "POST",
         headers: {
