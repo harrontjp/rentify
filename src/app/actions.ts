@@ -104,6 +104,7 @@ export async function CreateBooking(
       body: JSON.stringify(bookingData),
     });
     if (!res.ok) {
+      console.error(`Response error: ${res.status}`);
       return {
         _t: "error",
         error: `Response error: ${res.status}`,
@@ -115,6 +116,7 @@ export async function CreateBooking(
       response: result,
     };
   } catch (error) {
+    console.log(`Response error: ${error}`);
     return {
       _t: "error",
       error: `Response error: ${error}`,
@@ -132,6 +134,7 @@ export async function getBooking(userId: number) {
       },
     });
     if (!res.ok) {
+      console.error(`Response error: ${res.status}`);
       return {
         _t: "error",
         error: `Response error: ${res.status}`,
@@ -143,6 +146,7 @@ export async function getBooking(userId: number) {
       response: result,
     };
   } catch (error) {
+    console.error(`Response error: ${error}`);
     return {
       _t: "error",
       error: `Response error: ${error}`,
@@ -189,9 +193,10 @@ export async function CreatePayment(
     );
 
     if (!res.ok) {
+      console.log(`Response error: ${res.status}`);
       return {
         _t: "error",
-        error: `Response error: ${res.ok}`,
+        error: `Response error: ${res.status}`,
       };
     }
 
@@ -221,9 +226,10 @@ export async function getRecommendation(userId: number) {
     );
 
     if (!res.ok) {
+      console.error(`Response error: ${res.status}`);
       return {
         _t: "error",
-        error: `Response error: ${res.ok}`,
+        error: `Response error: ${res.status}`,
       };
     }
     const result = await res.json();
@@ -253,6 +259,7 @@ export async function createRecoView(userId: number, productId: string) {
     );
 
     if (!res.ok) {
+      console.error(`Response error: ${res.status}`);
       return {
         _t: "error",
         error: `Response error: ${res.ok}`,
@@ -264,6 +271,7 @@ export async function createRecoView(userId: number, productId: string) {
       res: result,
     };
   } catch (error) {
+    console.error(`Response error: ${error}`);
     return {
       _t: "error",
       error: `Response error: ${error}`,
