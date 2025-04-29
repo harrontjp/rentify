@@ -26,7 +26,7 @@ type Booking = {
 const BookingsPage = async () => {
   const getStatusColor = (status: Booking["status"]) => {
     switch (status) {
-      case "confirmed":
+      case "CONFIRMED":
         return "bg-green-500";
       case "PENDING":
         return "bg-yellow-500";
@@ -88,7 +88,7 @@ const BookingsPage = async () => {
                     <TableCell>
                       {format(booking.bookingEndDate, "MMM dd, yyyy")}
                     </TableCell>
-                    <TableCell>${booking.totalAmount}</TableCell>
+                    <TableCell>${booking.totalAmount.toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(booking.status)}>
                         {booking.status}

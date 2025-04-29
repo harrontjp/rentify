@@ -47,48 +47,19 @@ export default function ProductListing({
   return (
     <>
       <FilterBox filterProduct={filterProduct} />
-      <div
-        className="p-2.5 w-full"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "1rem",
-        }}
-      >
-        {recoVehicles.length > 1 &&
-          state == null &&
-          recoVehicles.map((prod: Vehicle, ind: number) => (
-            <div
-              key={ind}
-              className="flex flex-col w-fit p-2.5 gap-1.5 hover:border-blue-200 hover:border-2 "
-              style={{
-                borderRadius: "8px",
-                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                router.push(`/${prod.id}`);
-              }}
-            >
-              <Image
-                src={`/car/car${prod.id}.jpg`}
-                alt="Car Image"
-                width={364}
-                height={267}
-                style={{ height: "100%" }}
-              />
-              <div className="text-blue-950 font-bold text-sm">
-                {prod.transmissionType + " • " + prod.fuelType}
-              </div>
-              <div className="text-lg font-bold">{prod.vehicleModel}</div>
-              <div className="text-lg pt-2">${prod.pricePerDay} / day</div>
-            </div>
-          ))}
-        {pending
-          ? "Loading..."
-          : state?.error != null
-          ? state.error
-          : sharedState.products.map((prod: Vehicle, ind: number) => (
+      <div className="flex flex-col">
+        {recoVehicles.length > 1 && state == null && <RecommendedTag />}
+        <div
+          className="p-2.5 w-full"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "1rem",
+          }}
+        >
+          {recoVehicles.length > 1 &&
+            state == null &&
+            recoVehicles.map((prod: Vehicle, ind: number) => (
               <div
                 key={ind}
                 className="flex flex-col w-fit p-2.5 gap-1.5 hover:border-blue-200 hover:border-2 "
@@ -115,8 +86,58 @@ export default function ProductListing({
                 <div className="text-lg pt-2">${prod.pricePerDay} / day</div>
               </div>
             ))}
+          {pending
+            ? "Loading..."
+            : state?.error != null
+            ? state.error
+            : sharedState.products.map((prod: Vehicle, ind: number) => (
+                <div
+                  key={ind}
+                  className="flex flex-col w-fit p-2.5 gap-1.5 hover:border-blue-200 hover:border-2 "
+                  style={{
+                    borderRadius: "8px",
+                    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    router.push(`/${prod.id}`);
+                  }}
+                >
+                  <Image
+                    src={`/car/car${prod.id}.jpg`}
+                    alt="Car Image"
+                    width={364}
+                    height={267}
+                    style={{ height: "100%" }}
+                  />
+                  <div className="text-blue-950 font-bold text-sm">
+                    {prod.transmissionType + " • " + prod.fuelType}
+                  </div>
+                  <div className="text-lg font-bold">{prod.vehicleModel}</div>
+                  <div className="text-lg pt-2">${prod.pricePerDay} / day</div>
+                </div>
+              ))}
+        </div>
       </div>
     </>
+  );
+}
+
+function RecommendedTag() {
+  return (
+    <div
+      style={{
+        marginLeft: "8px",
+        background: "rgb(123 217 123)",
+        borderRadius: "999px",
+        padding: "4px 12px",
+        display: "flex",
+        width: "fit-content",
+        marginBottom: "8px",
+      }}
+    >
+      Recommended List
+    </div>
   );
 }
 

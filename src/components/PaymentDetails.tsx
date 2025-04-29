@@ -33,7 +33,7 @@ export default function PaymentDetails({ vehicle }: { vehicle: Vehicle }) {
   }, [state, sharedState, setSharedState, showedError]);
   const { bookingDates } = sharedState.filter;
   if (bookingDates.to == null) return <></>;
-  const numOfDays = getDaysBetweenDates(bookingDates.from, bookingDates.to);
+  const numOfDays = getDaysBetweenDates(bookingDates.from, bookingDates.to) + 1;
 
   return (
     <>
