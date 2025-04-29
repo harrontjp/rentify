@@ -58,7 +58,7 @@ export default function ProductListing({
           }}
         >
           {recoVehicles.length > 1 &&
-            state == null &&
+            sharedState.products.length === 0 &&
             recoVehicles.map((prod: Vehicle, ind: number) => (
               <div
                 key={ind}
