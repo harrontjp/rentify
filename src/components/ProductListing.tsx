@@ -44,11 +44,15 @@ export default function ProductListing({
     }
   }, [state, sharedState, setSharedState]);
 
+  console.log(sharedState.products.length === 0);
+
   return (
     <>
       <FilterBox filterProduct={filterProduct} />
       <div className="flex flex-col">
-        {recoVehicles.length > 1 && state == null && <RecommendedTag />}
+        {recoVehicles.length > 1 && sharedState.products.length === 0 && (
+          <RecommendedTag />
+        )}
         <div
           className="p-2.5 w-full"
           style={{

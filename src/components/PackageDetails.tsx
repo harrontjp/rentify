@@ -35,20 +35,24 @@ export default function PackageDetails() {
         <div className="flex gap-3">
           <div
             className={
-              "px-3 py-2 border-1 rounded-lg " + paymentOption === "online"
+              "px-3 py-2 border-1 rounded-lg " +
+              (paymentOption === "online"
                 ? "border-[#004F8A]"
-                : "border-[#E6E6E6]"
+                : "border-[#E6E6E6]")
             }
+            style={{ cursor: "pointer" }}
             onClick={() => setPaymentOption("online")}
           >
             Pay online
           </div>
           <div
             className={
-              "px-3 py-2 border-1 rounded-lg " + paymentOption === "pickup"
+              "px-3 py-2 border-1 rounded-lg " +
+              (paymentOption === "pickup"
                 ? "border-[#004F8A]"
-                : "border-[#E6E6E6]"
+                : "border-[#E6E6E6]")
             }
+            style={{ cursor: "pointer" }}
             onClick={() => setPaymentOption("pickup")}
           >
             Pay at pick-up
