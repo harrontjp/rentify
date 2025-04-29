@@ -13,12 +13,14 @@ import {
 } from "react";
 import styles from "./styles.module.css";
 import { useSharedState } from "@/app/StateProvider";
+import { useRouter } from "next/navigation";
 export default function Payment() {
   const { sharedState, setSharedState } = useSharedState();
   const [state, createPayment, pending] = useActionState(CreatePayment, {
     _t: "notAsked",
     res: "",
   });
+  const router = useRouter();
 
   const [paymentForm, setPaymentForm] = useState<PaymentForm>({
     name: "",
@@ -108,12 +110,14 @@ export default function Payment() {
                   />
                   Payment has been confirmed!
                   <DonePaymentButton
-                    onSubmit={() =>
+                    onSubmit={() => {
                       setSharedState({
                         ...sharedState,
                         isPaymentPageOpen: false,
-                      })
-                    }
+                        bookingId: null,
+                      });
+                      router.push("/bookings");
+                    }}
                     paymentForm={paymentForm}
                   />
                 </>
