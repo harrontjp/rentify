@@ -15,7 +15,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await verifySession();
-  console.log(session);
   const userId: number | null =
     session.userId != null ? (session.userId as number) : null;
   return (
