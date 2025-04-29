@@ -98,7 +98,26 @@ export default function Payment() {
                 fontWeight: "600",
               }}
             >
-              {state.error == null ? (
+              {
+                <>
+                  <Image
+                    alt="marker"
+                    src="/success.svg"
+                    width={92}
+                    height={92}
+                  />
+                  Payment has been confirmed!
+                  <DonePaymentButton
+                    onSubmit={() =>
+                      setSharedState({
+                        ...sharedState,
+                        isPaymentPageOpen: false,
+                      })
+                    }
+                    paymentForm={paymentForm}
+                  />
+                </>
+                /* {state.error == null ? (
                 <>
                   <Image
                     alt="marker"
@@ -131,7 +150,8 @@ export default function Payment() {
                     paymentForm={paymentForm}
                   />
                 </>
-              )}
+              )} */
+              }
             </div>
           )}
         </div>
