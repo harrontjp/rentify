@@ -114,7 +114,6 @@ export default function Payment() {
                       setSharedState({
                         ...sharedState,
                         isPaymentPageOpen: false,
-                        bookingId: null,
                       });
                       router.push("/bookings");
                     }}
