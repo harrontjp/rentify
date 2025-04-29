@@ -181,21 +181,19 @@ export async function CreatePayment(
 
     paymentStatus: "SUCCESS",
   };
-
+  const url = `http://${process.env.PAYMENT_URL}:${process.env.PAYMENT_PORT}/api/payments`;
+  console.log(url);
   try {
-    const res = await fetch(
-      `http://${process.env.PAYMENT_URL}:${process.env.PAYMENT_PORT}/api/payments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params),
-      }
-    );
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
 
     if (!res.ok) {
-      console.log(`Response error: ${res.status}`);
+      console.log(`Response error: ${res}`);
       return {
         _t: "error",
         error: `Response error: ${res.status}`,
